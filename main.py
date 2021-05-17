@@ -7,10 +7,7 @@ class State():
     field: typing.List[typing.List[int]]
     combo: int
     point: typing.Tuple[int, int]
-    
-    def __init__(self, combo) -> None:
-        self.combo = combo
-    
+
     def __eq__(self, o) -> bool:
         return self.combo == o.combo
 
