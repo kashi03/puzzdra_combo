@@ -7,6 +7,7 @@ class State():
     field: typing.List[typing.List[int]]
     combo: int
     point: typing.Tuple[int, int]
+    move_history: typing.List[typing.Tuple[int, int]]
 
     def __eq__(self, o) -> bool:
         return self.combo == o.combo
@@ -42,7 +43,7 @@ def main():
         [4,5,6,0,1,2,3]
     ]
     
-    first_state = State(field, 0, (0, 0))
+    first_state = State(field, 0, (0, 0), [(0, 0)])
     beam_search(first_state, 100)
 
 if __name__ == "__main__":
