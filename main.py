@@ -44,7 +44,7 @@ def beam_search(first_state, move_number):
     field_height = len(first_state.field)
     now_states = [] # 現在の状態保存用
     heapq.heappush(now_states, first_state)
-    k = 5 #ビーム幅
+    k = 1000 #ビーム幅
     comb = set()
     for _ in range(move_number):
         print(len(now_states))
@@ -73,7 +73,7 @@ def main():
     
     first_point = Point(2, 2)
     first_state = State(field, 0, first_point, [first_point])
-    result = beam_search(first_state, 20)
+    result = beam_search(first_state, 50)
     print(result)
 
 if __name__ == "__main__":
