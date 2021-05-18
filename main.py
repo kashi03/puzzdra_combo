@@ -1,6 +1,7 @@
 import heapq
 import typing
 from dataclasses import dataclass
+import hashlib
 
 from util.puzzle import Puzzle
 
@@ -30,6 +31,10 @@ class State():
 
     def __ge__(self, o) -> bool:
         return self.combo >= o.combo
+    
+    def __hash__(self) -> int:
+        string = str(self.field) + str(self.combo) + str(self.point) + str(self.move_history)
+        return hash(string)
 
 def get_next_state(state: State, dst: Point):
     field = [ [ i for i in j ] for j in state.field ]
@@ -45,6 +50,7 @@ def beam_search(first_state, move_number):
     now_states = [] # 現在の状態保存用
     heapq.heappush(now_states, first_state)
     k = 1000 #ビーム幅
+    done = set()
     comb = set()
     for _ in range(move_number):
         print(len(now_states))
@@ -53,10 +59,26 @@ def beam_search(first_state, move_number):
             if len(now_states) == 0: break
             state = heapq.heappop(now_states)
             comb.add(state.combo)
-            if state.point.x-1 >= 0: next_states.append( get_next_state(state, Point( state.point.x-1, state.point.y )) )
-            if state.point.x+1 < field_width: next_states.append( get_next_state(state, Point( state.point.x+1, state.point.y )) )
-            if state.point.y-1 >= 0: next_states.append( get_next_state(state, Point( state.point.x, state.point.y-1 )) )
-            if state.point.y+1 < field_height: next_states.append( get_next_state(state, Point( state.point.x, state.point.y+1 )) )
+            if state.point.x-1 >= 0: 
+                next_state = get_next_state(state, Point( state.point.x-1, state.point.y ))
+                if not next_state in done:
+                    next_states.append(next_state)
+                    done.add(next_state)
+            if state.point.x+1 < field_width:
+                next_state = get_next_state(state, Point( state.point.x+1, state.point.y ))
+                if not next_state in done:
+                    next_states.append(next_state)
+                    done.add(next_state)
+            if state.point.y-1 >= 0:
+                next_state = get_next_state(state, Point( state.point.x, state.point.y-1 ))
+                if not next_state in done:
+                    next_states.append(next_state)
+                    done.add(next_state)
+            if state.point.y+1 < field_height:
+                next_state = get_next_state(state, Point( state.point.x, state.point.y+1 ))
+                if not next_state in done:
+                    next_states.append(next_state)
+                    done.add(next_state)
         heapq.heapify(next_states)
         now_states = next_states
     print(comb)
